@@ -1,11 +1,13 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Card } from '../../src/components/ui/Card';
 import { Badge } from '../../src/components/ui/Badge';
 import { useProfileStore } from '../../src/store/profileStore';
-import { materials, materialById } from '../../src/data/materials';
+import { materials } from '../../src/data/materials';
+import { materialWeightConfigById } from '../../src/data/weights';
 import { Colors, Spacing, FontSize, FontWeight, Radius } from '../../src/constants/tokens';
 
 const goalLabels: Record<string, string> = {
@@ -24,7 +26,8 @@ const levelLabels: Record<string, string> = {
 };
 
 export default function ProfileScreen() {
-  const { profile, toggleMaterial } = useProfileStore();
+  const router = useRouter();
+  const { profile, materialWeightRanges, toggleMaterial } = useProfileStore();
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
@@ -74,23 +77,48 @@ export default function ProfileScreen() {
           <View style={styles.materialList}>
             {materials.map((mat) => {
               const isSelected = profile.availableMaterialIds.includes(mat.id);
+              const hasWeights = mat.category === 'free_weight';
+              const weightRange = materialWeightRanges[mat.id];
               return (
-                <TouchableOpacity
-                  key={mat.id}
-                  style={[styles.materialItem, isSelected && styles.materialSelected]}
-                  onPress={() => toggleMaterial(mat.id)}
-                  activeOpacity={0.75}
-                >
-                  <Text style={[styles.materialName, isSelected && styles.materialNameSelected]}>
-                    {mat.name}
-                  </Text>
-                  {isSelected && (
-                    <Ionicons name="checkmark-circle" size={18} color={Colors.accent} />
+                <View key={mat.id}>
+                  <TouchableOpacity
+                    style={[styles.materialItem, isSelected && styles.materialSelected]}
+                    onPress={() => toggleMaterial(mat.id)}
+                    activeOpacity={0.75}
+                  >
+                    <Text style={[styles.materialName, isSelected && styles.materialNameSelected]}>
+                      {mat.name}
+                    </Text>
+                    {isSelected && (
+                      <Ionicons name="checkmark-circle" size={18} color={Colors.accent} />
+                    )}
+                  </TouchableOpacity>
+                  {isSelected && hasWeights && weightRange && (
+                    <TouchableOpacity
+                      style={styles.weightRow}
+                      onPress={() => router.push('/profile/weights')}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons name="scale-outline" size={14} color={Colors.textSecondary} />
+                      <Text style={styles.weightRangeText}>
+                        {weightRange.minKg} kg — {weightRange.maxKg} kg
+                      </Text>
+                      <Ionicons name="chevron-forward" size={14} color={Colors.textMuted} />
+                    </TouchableOpacity>
                   )}
-                </TouchableOpacity>
+                </View>
               );
             })}
           </View>
+          <TouchableOpacity
+            style={styles.weightsButton}
+            onPress={() => router.push('/profile/weights')}
+            activeOpacity={0.8}
+          >
+            <Ionicons name="options-outline" size={16} color={Colors.accent} />
+            <Text style={styles.weightsButtonLabel}>Gewichten instellen</Text>
+            <Ionicons name="chevron-forward" size={16} color={Colors.accent} />
+          </TouchableOpacity>
         </Card>
 
         {/* Info */}
@@ -219,6 +247,37 @@ const styles = StyleSheet.create({
   materialNameSelected: {
     color: Colors.accent,
     fontWeight: FontWeight.semibold,
+  },
+  weightRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.xs,
+    paddingHorizontal: Spacing.md,
+    paddingVertical: Spacing.xs,
+    marginTop: -Spacing.xs,
+  },
+  weightRangeText: {
+    flex: 1,
+    fontSize: FontSize.xs,
+    color: Colors.textSecondary,
+  },
+  weightsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.sm,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+    borderRadius: Radius.sm,
+    borderWidth: 1,
+    borderColor: Colors.accent,
+    borderStyle: 'dashed',
+    marginTop: Spacing.xs,
+  },
+  weightsButtonLabel: {
+    flex: 1,
+    fontSize: FontSize.sm,
+    fontWeight: FontWeight.semibold,
+    color: Colors.accent,
   },
   infoText: {
     fontSize: FontSize.sm,

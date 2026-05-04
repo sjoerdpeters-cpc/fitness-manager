@@ -1,0 +1,35 @@
+{
+  "version": "1.3.1",
+  "materials": [
+    {
+      "id": "mat_001",
+      "name": "Dumbbell",
+      "category": "free_weight",
+      "available": true
+    },
+    {
+      "id": "mat_002",
+      "name": "Barbell",
+      "category": "free_weight",
+      "available": true
+    },
+    {
+      "id": "mat_003",
+      "name": "Kettlebell",
+      "category": "free_weight",
+      "available": true
+    },
+    {
+      "id": "mat_004",
+      "name": "EZ Curl Bar",
+      "category": "free_weight",
+      "available": false
+    },
+    {
+      "id": "mat_005",
+      "name": "Weight Plates",
+      "category": "free_weight",
+      "available": true
+    }
+  ]
+}

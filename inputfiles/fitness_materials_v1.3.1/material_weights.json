@@ -1,0 +1,56 @@
+{
+  "version": "1.3.1",
+  "materialWeights": [
+    {
+      "materialId": "mat_001",
+      "loadType": "pair",
+      "weightIds": [
+        "w_002",
+        "w_003",
+        "w_005",
+        "w_006"
+      ]
+    },
+    {
+      "materialId": "mat_002",
+      "loadType": "barbell",
+      "barWeightKg": 20,
+      "weightIds": [
+        "w_002",
+        "w_003",
+        "w_005",
+        "w_010",
+        "w_011"
+      ]
+    },
+    {
+      "materialId": "mat_003",
+      "loadType": "single",
+      "weightIds": [
+        "w_003",
+        "w_005",
+        "w_010"
+      ]
+    },
+    {
+      "materialId": "mat_004",
+      "loadType": "barbell",
+      "barWeightKg": 10,
+      "weightIds": [
+        "w_001",
+        "w_002",
+        "w_003"
+      ]
+    },
+    {
+      "materialId": "mat_005",
+      "loadType": "barbell",
+      "weightIds": [
+        "w_001",
+        "w_002",
+        "w_003",
+        "w_005"
+      ]
+    }
+  ]
+}

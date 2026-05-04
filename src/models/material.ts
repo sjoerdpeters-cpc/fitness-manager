@@ -6,3 +6,8 @@ export interface Material {
   category: MaterialCategory;
   available: boolean;
 }
+
+export interface WeightRange {
+  minKg: number;
+  maxKg: number;
+}

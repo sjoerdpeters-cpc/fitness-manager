@@ -1,13 +1,17 @@
 import { create } from 'zustand';
-import type { UserProfile, FitnessGoal, FitnessLevel } from '../models/profile';
+import type { UserProfile, FitnessGoal } from '../models/profile';
+import type { WeightRange } from '../models/material';
+import { MATERIAL_WEIGHT_CONFIGS } from '../data/weights';
 
 interface ProfileState {
   profile: UserProfile;
   isOnboarded: boolean;
+  materialWeightRanges: Record<string, WeightRange>;
   updateProfile: (updates: Partial<UserProfile>) => void;
   setOnboarded: (value: boolean) => void;
   toggleGoal: (goal: FitnessGoal) => void;
   toggleMaterial: (materialId: string) => void;
+  setWeightRange: (materialId: string, range: WeightRange) => void;
 }
 
 const defaultProfile: UserProfile = {
@@ -18,9 +22,17 @@ const defaultProfile: UserProfile = {
   weeklyWorkouts: 3,
 };
 
+const defaultWeightRanges: Record<string, WeightRange> = Object.fromEntries(
+  MATERIAL_WEIGHT_CONFIGS.map((c) => [
+    c.materialId,
+    { minKg: c.defaultMin, maxKg: c.defaultMax },
+  ])
+);
+
 export const useProfileStore = create<ProfileState>((set) => ({
   profile: defaultProfile,
   isOnboarded: false,
+  materialWeightRanges: defaultWeightRanges,
 
   updateProfile: (updates) =>
     set((state) => ({ profile: { ...state.profile, ...updates } })),
@@ -42,4 +54,12 @@ export const useProfileStore = create<ProfileState>((set) => ({
         : [...state.profile.availableMaterialIds, materialId];
       return { profile: { ...state.profile, availableMaterialIds: ids } };
     }),
+
+  setWeightRange: (materialId, range) =>
+    set((state) => ({
+      materialWeightRanges: {
+        ...state.materialWeightRanges,
+        [materialId]: range,
+      },
+    })),
 }));
